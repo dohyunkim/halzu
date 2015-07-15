@@ -29,7 +29,7 @@
 \def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
   \setbox\z@\vbox{\hsize #2\emergencystretch.2em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
   \setbox\tw@\vsplit\z@ to\tw@\baselineskip
-  \raise.5ex\hbox{$\vcenter{\hsize\wd\tw@ \unvbox\tw@}$}\penalty\z@
+  \halz@typeset{\unvbox\tw@}{\wd\tw@}\penalty\z@
   \setbox\z@\hbox{%
     \loop
       \setbox\tw@\vsplit\z@ to\baselineskip
@@ -59,11 +59,13 @@
       \halz@first@two{\unhbox\z@}\dimen@ii
       \halz@remaining % self-reference
     \else
-      \ifnum\count@<\tw@
-        \setbox\z@\vbox{\hsize\dimen@\unhbox\z@}\ht\z@\ht6 \dp\z@\dp6 \box\z@
-      \else
-        \raise.5ex\hbox{$\vcenter{\hsize\dimen@\unhbox\z@}$}%
-      \fi
+      \halz@typeset{\unhbox\z@
+        \ifnum\count@<\tw@ \ifdim\ht\z@<\baselineskip \break \fi\fi
+      }\dimen@
     \fi
   \fi
+}
+\def\halz@typeset#1#2{% 1: contents; 2: width,
+  \setbox4\hbox{$\vcenter{\hsize#2#1}$}%
+  \raise.5\dimexpr \ht6-\ht4+\dp4-\dp6 \relax\box4
 }

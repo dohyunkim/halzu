@@ -5,7 +5,11 @@ A LaTeX package for typesetting "split annotation" (Halzu, 할주, 割註, Waric
 a traditional CJK typographic convention of typesetting various notes in small
 double lines. It is (or was) frequently used, among others, in law books.
 
-The package requires pdfTeX, XeTeX, or LuaTeX engine and a LaTeX format.
+The package requires:
+
+- pdfTeX, XeTeX, or LuaTeX engine
+- LaTeX format.
+- `zref-savepos` package
 
 ## Usage
 
