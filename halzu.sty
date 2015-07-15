@@ -1,0 +1,69 @@
+\ProvidesPackage{halzu}[2015/07/15 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
+\RequirePackage{zref-savepos}
+\newcount\halzucnt \halzucnt\z@
+\protected\def\halzu#1{%
+  \begingroup\leavevmode
+  \setbox6\hbox{\Large\char40}%
+  \vbadness\maxdimen \vfuzz\maxdimen
+  \global\advance\halzucnt\@ne
+  \zsaveposx{halz@h@\the\halzucnt}%
+  \vadjust{\hfill\zsaveposx{halz@e@\the\halzucnt}\kern\rightmargin}%
+  \dimen@\dimexpr\zposx{halz@e@\the\halzucnt}sp-\zposx{halz@h@\the\halzucnt}sp\relax
+  \dimen@ii\dimexpr\linewidth-\leftskip-\rightskip\relax
+  \ifdim\dimen@=\z@ \dimen@\dimen@ii \fi
+  \linespread\@ne\scriptsize \parindent\z@ \splittopskip\z@ \leftskip\z@ \rightskip\z@
+  \ifdim\dimen@<\dimexpr1em+\wd6\relax
+    \break\dimen@\dimen@ii
+  \else
+    \hskip\z@ plus.2em
+  \fi
+  \begingroup\unhcopy6\endgroup \advance\dimen@-\wd6
+  \setbox\z@\hbox{#1}%
+  \ifdim\dimen@<\dimexpr 0.5\wd\z@+\wd6\relax
+    \halz@first@two{#1}\dimen@
+  \fi
+  \halz@remaining
+  \unpenalty\Large\char41
+  \endgroup
+}
+\def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
+  \setbox\z@\vbox{\hsize #2\emergencystretch.2em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
+  \setbox\tw@\vsplit\z@ to\tw@\baselineskip
+  \raise.5ex\hbox{$\vcenter{\hsize\wd\tw@ \unvbox\tw@}$}\penalty\z@
+  \setbox\z@\hbox{%
+    \loop
+      \setbox\tw@\vsplit\z@ to\baselineskip
+      \unless\ifvoid\tw@
+        \setbox\tw@\vbox{\unvbox\tw@\global\setbox\@ne\lastbox}%
+        \unhbox\@ne\unskip
+    \repeat
+  }%
+}
+\def\halz@remaining{%
+  \dimen@ 0.5\wd\z@ % check the maximum width of each line.
+  \dimen4 \wd\z@    % check the minimum width of each line.
+  \count@ \z@       % check the number of lines
+  \setbox\tw@\vbox{\hsize\dimen@\unhcopy\z@}%
+  \loop
+    \setbox4\vsplit\tw@ to\baselineskip
+    \unless\ifvoid4
+      \advance\count@\@ne
+      \setbox4\vbox{\unvbox4\global\setbox\@ne\lastbox}%
+      \setbox4\hbox{\unhbox\@ne}%
+      \ifdim\wd4>\dimen@ \dimen@\wd4 \fi
+      \ifdim\wd4<\dimen4 \dimen4\wd4 \fi
+  \repeat
+  \ifdim\dimen@>\z@
+    \ifnum\count@>\tw@ \advance\dimen@\dimen4 \fi
+    \ifdim\dimen@ii<\dimen@
+      \halz@first@two{\unhbox\z@}\dimen@ii
+      \halz@remaining % self-reference
+    \else
+      \ifnum\count@<\tw@
+        \setbox\z@\vbox{\hsize\dimen@\unhbox\z@}\ht\z@\ht6 \dp\z@\dp6 \box\z@
+      \else
+        \raise.5ex\hbox{$\vcenter{\hsize\dimen@\unhbox\z@}$}%
+      \fi
+    \fi
+  \fi
+}
