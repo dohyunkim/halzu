@@ -2,9 +2,10 @@
 \RequirePackage{zref-savepos}
 \newcount\halzucnt \halzucnt\z@
 \protected\def\halzu#1{%
-  \begingroup\leavevmode
-  \setbox6\hbox{\Large\char40}%
-  \penalty\z@\lower\lower@halzu\copy6\nobreak\hskip\z@
+  \begingroup\leavevmode \let\fontsubfuzz\maxdimen
+  \dimen6 \halzusize\dimexpr\f@size pt\relax
+  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\char40}%
+  \penalty\z@\lower\dimexpr\halzulower\relax\copy6\nobreak\hskip\z@
   \global\advance\halzucnt\@ne
   \zsaveposx{halz@h@\the\halzucnt}%
   \vadjust{\hfill\zsaveposx{halz@e@\the\halzucnt}\kern\rightmargin}%
@@ -12,13 +13,14 @@
   \dimen@ii\dimexpr\linewidth-\leftskip-\rightskip\relax
   \ifdim\dimen@=\z@ \dimen@\dimen@ii \fi
   \vbadness\maxdimen \vfuzz\maxdimen \splittopskip\z@
-  \linespread\@ne\scriptsize \parindent\z@ \leftskip\z@ \rightskip\z@
+  \linespread\@ne \parindent\z@ \leftskip\z@ \rightskip\z@
+  \fontsize{\dimen6}{1.1\dimen6}\selectfont
   \setbox\z@\hbox{#1}%
   \ifdim\dimen@<\dimexpr 0.5\wd\z@+\wd6\relax
     \halz@first@two{#1}\dimen@
   \fi
   \halz@remaining
-  \unpenalty\lower\lower@halzu\hbox{\Large\char41}%
+  \unpenalty\lower\dimexpr\halzulower\relax\hbox{\fontsize{2.1\dimen6}\z@\selectfont\char41}%
   \endgroup
 }
 \def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
@@ -38,7 +40,7 @@
   \dimen@ 0.5\wd\z@ % check the maximum width of each line.
   \dimen4 \wd\z@    % check the minimum width of each line.
   \count@ \z@       % check the number of lines
-  \setbox\tw@\vbox{\hsize\dimen@\unhcopy\z@}%
+  \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\dimen@\unhcopy\z@}%
   \loop
     \setbox4\vsplit\tw@ to\baselineskip
     \unless\ifvoid4
@@ -62,7 +64,7 @@
 }
 \def\halz@typeset#1#2{% 1: contents; 2: width,
   \setbox4\hbox{$\vcenter{\hsize#2#1}$}%
-  \raise.5\dimexpr \ht6 -\ht4 +\dp4 -\dp6 -\tw@\lower@halzu\relax\box4
+  \raise.5\dimexpr \ht6 -\ht4 +\dp4 -\dp6 -\tw@\dimexpr\halzulower\relax\relax\box4
 }
-\protected\def\halzulower#1{\def\lower@halzu{\dimexpr#1\relax}}
-\halzulower\z@
+\let\halzulower\z@
+\def\halzusize{0.7}

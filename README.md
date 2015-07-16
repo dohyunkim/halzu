@@ -20,12 +20,21 @@ In preamble:
 and in the body of document:
 ```
 \halzulower{0pt}% optional
+\halzusize{0.7}% optional
 \halzu{...}
 ```
 
-The only user command for configuration is `\halzulower{...}`, by which
-all Halzu boxes will move downwards by the amount specified in the argument.
+```
+\def\halzulower{0pt}
+```
+makes all Halzu boxes move downwards by the amount specified.
 `0pt` is the default. Negative value is also acceptable.
+
+```
+\def\halzusize{0.7}
+```
+denotes the factor between the current document font size and the Halzu font.
+The default value is `0.7`, the same as `scriptsize`.
 
 ## License
 
