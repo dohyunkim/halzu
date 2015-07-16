@@ -19,10 +19,12 @@ In preamble:
 ```
 and in the body of document:
 ```
-\halzulower{0pt}% optional
-\halzusize{0.7}% optional
+\def\halzulower{0pt}% optional
+\def\halzusize{0.7}% optional
 \halzu{...}
 ```
+
+## Optional commands
 
 ```
 \def\halzulower{0pt}
