@@ -1,29 +1,24 @@
-\ProvidesPackage{halzu}[2015/07/15 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
+\ProvidesPackage{halzu}[2015/07/16 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
 \RequirePackage{zref-savepos}
 \newcount\halzucnt \halzucnt\z@
 \protected\def\halzu#1{%
   \begingroup\leavevmode
   \setbox6\hbox{\Large\char40}%
-  \vbadness\maxdimen \vfuzz\maxdimen
+  \penalty\z@\lower\lower@halzu\copy6\nobreak\hskip\z@
   \global\advance\halzucnt\@ne
   \zsaveposx{halz@h@\the\halzucnt}%
   \vadjust{\hfill\zsaveposx{halz@e@\the\halzucnt}\kern\rightmargin}%
   \dimen@\dimexpr\zposx{halz@e@\the\halzucnt}sp-\zposx{halz@h@\the\halzucnt}sp\relax
   \dimen@ii\dimexpr\linewidth-\leftskip-\rightskip\relax
   \ifdim\dimen@=\z@ \dimen@\dimen@ii \fi
-  \linespread\@ne\scriptsize \parindent\z@ \splittopskip\z@ \leftskip\z@ \rightskip\z@
-  \ifdim\dimen@<\dimexpr1em+\wd6\relax
-    \break\dimen@\dimen@ii
-  \else
-    \hskip\z@ plus.2em
-  \fi
-  \begingroup\unhcopy6\endgroup \advance\dimen@-\wd6
+  \vbadness\maxdimen \vfuzz\maxdimen \splittopskip\z@
+  \linespread\@ne\scriptsize \parindent\z@ \leftskip\z@ \rightskip\z@
   \setbox\z@\hbox{#1}%
   \ifdim\dimen@<\dimexpr 0.5\wd\z@+\wd6\relax
     \halz@first@two{#1}\dimen@
   \fi
   \halz@remaining
-  \unpenalty\Large\char41
+  \unpenalty\lower\lower@halzu\hbox{\Large\char41}%
   \endgroup
 }
 \def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
@@ -67,5 +62,7 @@
 }
 \def\halz@typeset#1#2{% 1: contents; 2: width,
   \setbox4\hbox{$\vcenter{\hsize#2#1}$}%
-  \raise.5\dimexpr \ht6-\ht4+\dp4-\dp6 \relax\box4
+  \raise.5\dimexpr \ht6 -\ht4 +\dp4 -\dp6 -\tw@\lower@halzu\relax\box4
 }
+\protected\def\halzulower#1{\def\lower@halzu{\dimexpr#1\relax}}
+\halzulower\z@
