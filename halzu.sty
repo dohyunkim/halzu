@@ -1,6 +1,7 @@
 \ProvidesPackage{halzu}[2015/07/17 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
 \RequirePackage{zref-savepos}
 \newcount\halzucnt \halzucnt\z@
+\let\halz@savepos\@ne
 \protected\def\halzu#1#{%
   \begingroup
   \ifx\empty#1\empty
@@ -17,26 +18,47 @@
   \dimen6 \halzusize\dimexpr\f@size\p@\relax % dimen6 = halzu font size
   \vbadness\maxdimen \vfuzz\maxdimen \splittopskip\z@
   \parindent\z@ \leftskip\z@ \rightskip\z@
+  \edef\x{\noexpand\everypar{{\setbox\z@\lastbox}\the\everypar}}\x
   \let\fontsubfuzz\maxdimen
   \linespread\@ne \fontsize{\dimen6}{1.1\dimen6}\selectfont
   \penalty\z@
-  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuopening}% box6 = halzu opening
-  \raise\dimexpr\halzuraise\relax\copy6\nobreak\hskip\z@
+  \halz@surrounding\halzuopening % box6 = halzu opening
   \global\advance\halzucnt\@ne
-  \zsaveposx{halz@h@\the\halzucnt}%
-  \vadjust{\hfill\zsaveposx{halz@e@\the\halzucnt}\kern\rightmargin}%
-  \dimen@\dimexpr\zposx{halz@e@\the\halzucnt}sp-\zposx{halz@h@\the\halzucnt}sp\relax
-  \ifdim\dimen@=\z@ \dimen@\dimen@ii \fi
-  \setbox\z@\hbox{#1}%
-  \ifdim\dimen@<\dimexpr 0.5\wd\z@+\wd6\relax
-    \halz@first@two{#1}\dimen@
+  \ifhalzuonebyone
+    \ifnum\halz@savepos>\z@ \halz@do@savepos \fi
   \else
-    \setbox\z@\vbox{\hsize\maxdimen #1}%
-    \halz@remaining
+    \halz@do@savepos
   \fi
-  \unpenalty
-  \raise\dimexpr\halzuraise\relax\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuclosing}%
+  \count@\zposx{halz@h@\the\halzucnt}\relax
+  \ifnum\count@>\z@
+    \dimen@\dimexpr\zposx{halz@e@\the\halzucnt}sp-\the\count@ sp\relax
+    \ifdim\dimen@=\z@ \dimen@\dimen@ii \fi
+    \setbox\z@\hbox{#1}%
+    \ifdim\dimen@<\dimexpr 0.5\wd\z@+\wd6\relax
+      \halz@first@two{#1}\dimen@
+    \else
+      \setbox\z@\vbox{\hsize\maxdimen #1}%
+      \halz@remaining
+    \fi
+    \unpenalty
+    \global\let\halz@savepos\@ne
+  \else
+    \global\let\halz@savepos\z@
+  \fi
+  \halz@surrounding\halzuclosing
   \endgroup
+}
+\def\halz@surrounding#1{% #1: halzuopening or halzuclosing
+  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont #1}%
+  \ifdim\ht6>\z@
+    \raise\dimexpr\halzuraise\relax\copy6\nobreak\hskip\z@
+  \else
+    \begingroup\unhcopy6\endgroup
+  \fi
+}
+\def\halz@do@savepos{%
+  \zsavepos{halz@h@\the\halzucnt}%
+  \vadjust{\hfill\zsaveposx{halz@e@\the\halzucnt}\kern\rightmargin}%
 }
 \def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
   \setbox\z@\vbox{\hsize #2\emergencystretch.2em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
@@ -93,3 +115,4 @@
 \def\halzusize{0.7}
 \def\halzuopening{\char40}
 \def\halzuclosing{\char41}
+\newif\ifhalzuonebyone

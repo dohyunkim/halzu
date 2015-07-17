@@ -46,6 +46,13 @@ These commands define surrounding characters that will be typeset at
 the beginning and ending of Halzu box. Ascii parentheses are default.
 Empty values are also acceptable.
 
+```
+\halzuonebyonetrue
+\halzuonebyonefalse
+```
+If `true`, Halzu commands will be processed sequentially, one after another.
+Default is `false`.
+
 ## Example
 
 ```
