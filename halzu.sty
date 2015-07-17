@@ -1,32 +1,38 @@
-\ProvidesPackage{halzu}[2015/07/16 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
+\ProvidesPackage{halzu}[2015/07/17 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
 \RequirePackage{zref-savepos}
 \newcount\halzucnt \halzucnt\z@
 \protected\def\halzu#1{%
-  \begingroup\leavevmode \let\fontsubfuzz\maxdimen
-  \dimen6 \halzusize\dimexpr\f@size pt\relax
-  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\char40}%
-  \penalty\z@\lower\dimexpr\halzulower\relax\copy6\nobreak\hskip\z@
+  \begingroup
+  \leavevmode
+  \dimen8 1ex % dimen8 = 1ex of document font
+  \dimen@ii\dimexpr\linewidth-\leftskip-\rightskip\relax % dimen2 = actual line width
+  \dimen6 \halzusize\dimexpr\f@size\p@\relax % dimen6 = halzu font size
+  \vbadness\maxdimen \vfuzz\maxdimen \splittopskip\z@
+  \parindent\z@ \leftskip\z@ \rightskip\z@
+  \let\fontsubfuzz\maxdimen
+  \linespread\@ne \fontsize{\dimen6}{1.1\dimen6}\selectfont
+  \penalty\z@
+  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuopening}% box6 = halzu opening
+  \raise\dimexpr\halzuraise\relax\copy6\nobreak\hskip\z@
   \global\advance\halzucnt\@ne
   \zsaveposx{halz@h@\the\halzucnt}%
   \vadjust{\hfill\zsaveposx{halz@e@\the\halzucnt}\kern\rightmargin}%
   \dimen@\dimexpr\zposx{halz@e@\the\halzucnt}sp-\zposx{halz@h@\the\halzucnt}sp\relax
-  \dimen@ii\dimexpr\linewidth-\leftskip-\rightskip\relax
   \ifdim\dimen@=\z@ \dimen@\dimen@ii \fi
-  \vbadness\maxdimen \vfuzz\maxdimen \splittopskip\z@
-  \linespread\@ne \parindent\z@ \leftskip\z@ \rightskip\z@
-  \fontsize{\dimen6}{1.1\dimen6}\selectfont
   \setbox\z@\hbox{#1}%
   \ifdim\dimen@<\dimexpr 0.5\wd\z@+\wd6\relax
     \halz@first@two{#1}\dimen@
   \fi
   \halz@remaining
-  \unpenalty\lower\dimexpr\halzulower\relax\hbox{\fontsize{2.1\dimen6}\z@\selectfont\char41}%
+  \unpenalty
+  \raise\dimexpr\halzuraise\relax\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuclosing}%
   \endgroup
 }
 \def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
   \setbox\z@\vbox{\hsize #2\emergencystretch.2em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
   \setbox\tw@\vsplit\z@ to\tw@\baselineskip
-  \halz@typeset{\unvbox\tw@}{\wd\tw@}\penalty\z@
+  \halz@typeset{\unvbox\tw@}{\wd\tw@}%
+  \penalty\z@
   \setbox\z@\hbox{%
     \loop
       \setbox\tw@\vsplit\z@ to\baselineskip
@@ -63,8 +69,16 @@
   \fi
 }
 \def\halz@typeset#1#2{% 1: contents; 2: width,
-  \setbox4\hbox{$\vcenter{\hsize#2#1}$}%
-  \raise.5\dimexpr \ht6 -\ht4 +\dp4 -\dp6 -\tw@\dimexpr\halzulower\relax\relax\box4
+  \setbox4\hbox{\hsize#2$\vcenter{#1}$}%
+  \raise.5\dimexpr
+    \ifdim\ht6>\z@
+      \ht6 -\dp6 -\ht4 +\dp4
+    \else
+      \dimen8
+    \fi +\tw@\dimexpr\halzuraise\relax\relax
+    \box4
 }
-\let\halzulower\z@
+\let\halzuraise\z@
 \def\halzusize{0.7}
+\def\halzuopening{\char40}
+\def\halzuclosing{\char41}
