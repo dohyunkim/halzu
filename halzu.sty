@@ -1,8 +1,16 @@
 \ProvidesPackage{halzu}[2015/07/17 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
 \RequirePackage{zref-savepos}
 \newcount\halzucnt \halzucnt\z@
-\protected\def\halzu#1{%
+\protected\def\halzu#1#{%
   \begingroup
+  \ifx\empty#1\empty
+    \let\halz@centering\relax
+  \else
+    \let\halz@centering\centering
+  \fi
+  \halz@halzu
+}
+\def\halz@halzu#1{%
   \leavevmode
   \dimen8 1ex % dimen8 = 1ex of document font
   \dimen@ii\dimexpr\linewidth-\leftskip-\rightskip\relax % dimen2 = actual line width
@@ -22,8 +30,10 @@
   \setbox\z@\hbox{#1}%
   \ifdim\dimen@<\dimexpr 0.5\wd\z@+\wd6\relax
     \halz@first@two{#1}\dimen@
+  \else
+    \setbox\z@\vbox{\hsize\maxdimen #1}%
+    \halz@remaining
   \fi
-  \halz@remaining
   \unpenalty
   \raise\dimexpr\halzuraise\relax\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuclosing}%
   \endgroup
@@ -33,6 +43,9 @@
   \setbox\tw@\vsplit\z@ to\tw@\baselineskip
   \halz@typeset{\unvbox\tw@}{\wd\tw@}%
   \penalty\z@
+  \halz@remaining
+}
+\def\halz@remaining{% #1: vbox number
   \setbox\z@\hbox{%
     \loop
       \setbox\tw@\vsplit\z@ to\baselineskip
@@ -40,9 +53,8 @@
         \setbox\tw@\vbox{\unvbox\tw@\global\setbox\@ne\lastbox}%
         \unhbox\@ne\unskip
     \repeat
+    \unskip\unpenalty
   }%
-}
-\def\halz@remaining{%
   \dimen@ 0.5\wd\z@ % check the maximum width of each line.
   \dimen4 \wd\z@    % check the minimum width of each line.
   \count@ \z@       % check the number of lines
@@ -60,7 +72,6 @@
     \ifnum\count@>\tw@ \advance\dimen@\dimen4 \fi
     \ifdim\dimen@ii<\dimen@
       \halz@first@two{\unhbox\z@}\dimen@ii
-      \halz@remaining % self-reference
     \else
       \halz@typeset{\unhbox\z@
         \ifnum\count@<\tw@ \ifdim\ht\z@<\baselineskip \break \fi\fi
@@ -69,7 +80,7 @@
   \fi
 }
 \def\halz@typeset#1#2{% 1: contents; 2: width,
-  \setbox4\hbox{\hsize#2$\vcenter{#1}$}%
+  \setbox4\hbox{\hsize#2$\vcenter{\halz@centering #1}$}%
   \raise.5\dimexpr
     \ifdim\ht6>\z@
       \ht6 -\dp6 -\ht4 +\dp4

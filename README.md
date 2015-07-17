@@ -20,7 +20,9 @@ In preamble:
 and in the body of document:
 ```
 \halzu{...}
+\halzu*{...}
 ```
+The starred version will make the contents of Halzu box center-aligned.
 
 ## Optional commands
 
@@ -40,8 +42,9 @@ The default value is `0.7`, the same as `scriptsize`.
 \def\halzuopening{(}
 \def\halzuclosing{)}
 ```
-These commands define surrounding parentheses that will be typeset at
-the beginning and ending of Halzu box. Empty values are also acceptable.
+These commands define surrounding characters that will be typeset at
+the beginning and ending of Halzu box. Ascii parentheses are default.
+Empty values are also acceptable.
 
 ## Example
 
