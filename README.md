@@ -50,8 +50,8 @@ Empty values are also acceptable.
 \halzuonebyonetrue
 \halzuonebyonefalse
 ```
-If `true`, Halzu commands will be processed sequentially, one after another.
-Default is `false`.
+If `true`, Halzu commands will be processed sequentially---one at this
+compile round, another at next.  Default is `false`.
 
 ## Example
 

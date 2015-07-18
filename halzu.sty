@@ -22,7 +22,7 @@
   \let\fontsubfuzz\maxdimen
   \linespread\@ne \fontsize{\dimen6}{1.1\dimen6}\selectfont
   \penalty\z@
-  \halz@surrounding\halzuopening % box6 = halzu opening
+  \halz@surrounding\halzuopening \nobreak\hskip\z@ % box6 = halzu opening
   \global\advance\halzucnt\@ne
   \ifhalzuonebyone
     \ifnum\halz@savepos>\z@ \halz@do@savepos \fi
@@ -51,7 +51,7 @@
 \def\halz@surrounding#1{% #1: halzuopening or halzuclosing
   \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont #1}%
   \ifdim\ht6>\z@
-    \raise\dimexpr\halzuraise\relax\copy6\nobreak\hskip\z@
+    \raise\dimexpr\halzuraise\relax\copy6
   \else
     \begingroup\unhcopy6\endgroup
   \fi
