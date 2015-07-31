@@ -116,5 +116,5 @@
 \def\halzusize{0.7}
 \def\halzuopening{\char40}
 \def\halzuclosing{\char41}
-\def\halzuonebyonetrue {\let\halz@savepos\@ne \let\halz@onebyone\@ne}
-\def\halzuonebyonefalse{\let\halz@savepos\@ne \let\halz@onebyone\z@}
+\def\halzuonebyonetrue {\global\let\halz@savepos\@ne \let\halz@onebyone\@ne}
+\def\halzuonebyonefalse{\global\let\halz@savepos\@ne \let\halz@onebyone\z@}
