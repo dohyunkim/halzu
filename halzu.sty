@@ -1,6 +1,7 @@
 \ProvidesPackage{halzu}[2015/07/17 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
 \RequirePackage{zref-savepos}
-\newcount\halzucnt \halzucnt\z@
+\newcount\halz@cnt \halz@cnt\z@
+\let\halz@onebyone\z@
 \let\halz@savepos\@ne
 \protected\def\halzu#1#{%
   \begingroup
@@ -23,15 +24,15 @@
   \linespread\@ne \fontsize{\dimen6}{1.1\dimen6}\selectfont
   \penalty\z@
   \halz@surrounding\halzuopening \nobreak\hskip\z@ % box6 = halzu opening
-  \global\advance\halzucnt\@ne
-  \ifhalzuonebyone
-    \ifnum\halz@savepos>\z@ \halz@do@savepos \fi
+  \global\advance\halz@cnt\@ne
+  \ifx\halz@onebyone\@ne
+    \ifx\halz@savepos\@ne \halz@do@savepos \fi
   \else
     \halz@do@savepos
   \fi
-  \count@\zposx{halz@h@\the\halzucnt}\relax
+  \count@\zposx{halz@h@\the\halz@cnt}\relax
   \ifnum\count@>\z@
-    \dimen@\dimexpr\zposx{halz@e@\the\halzucnt}sp-\the\count@ sp\relax
+    \dimen@\dimexpr\zposx{halz@e@\the\halz@cnt}sp-\the\count@ sp\relax
     \ifdim\dimen@=\z@ \dimen@\dimen@ii \fi
     \setbox\z@\hbox{#1}%
     \ifdim\dimen@<\dimexpr 0.5\wd\z@+\wd6\relax
@@ -57,8 +58,8 @@
   \fi
 }
 \def\halz@do@savepos{%
-  \zsavepos{halz@h@\the\halzucnt}%
-  \vadjust{\hfill\zsaveposx{halz@e@\the\halzucnt}\kern\rightmargin}%
+  \zsavepos{halz@h@\the\halz@cnt}%
+  \vadjust{\hfill\zsaveposx{halz@e@\the\halz@cnt}\kern\rightmargin}%
 }
 \def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
   \setbox\z@\vbox{\hsize #2\emergencystretch.2em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
@@ -115,4 +116,5 @@
 \def\halzusize{0.7}
 \def\halzuopening{\char40}
 \def\halzuclosing{\char41}
-\newif\ifhalzuonebyone
+\def\halzuonebyonetrue {\let\halz@savepos\@ne \let\halz@onebyone\@ne}
+\def\halzuonebyonefalse{\let\halz@savepos\@ne \let\halz@onebyone\z@}
