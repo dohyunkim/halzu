@@ -1,0 +1,133 @@
+\ProvidesPackage{halzu2}[2016/06/17 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
+\protected\def\halzu#1#{%
+  \begingroup
+	\dimen8=1ex % dimen8 = 1ex of document font
+  \dimen6=\halzusize\dimexpr\f@size\p@\relax % dimen6 = halzu font size
+  \dimen@ii\dimexpr\linewidth-\leftskip-\rightskip\relax % dimen2 = line width
+  \parskip\z@
+	% get current horiz. position -> dimen1
+	\begingroup
+  \parfillskip\z@ plus 1fil\relax
+  \predisplaypenalty\@M
+  \postdisplaypenalty\@M
+  \abovedisplayshortskip\z@
+  \belowdisplayshortskip\z@
+	\abovedisplayskip\z@
+	\belowdisplayskip\z@
+  $$\global\dimen\@ne\predisplaysize$$%
+  \vskip-2\baselineskip
+  \noindent
+	\ifdim\dimen\@ne>\dimexpr\dimen@ii+2em\relax % already full
+		\break
+		\global\dimen\@ne\dimen@ii
+	\else\ifdim\dimen\@ne<\z@  % empty line
+		\break
+		\global\dimen\@ne\dimen@ii
+	\else
+		\global\advance\dimen\@ne -2em
+		\kern\dimen\@ne
+	\fi\fi
+	\endgroup
+	% get command option
+	\ifx\empty#1\empty
+		\let\halz@centering\relax
+	\else
+		\let\halz@centering\centering
+	\fi
+	\halz@halzu
+}
+\def\halz@halzu#1{%
+  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuopening}% opening
+  \dimen@\dimexpr\dimen@ii-\dimen\@ne-\wd6\relax % dimen0 = remaining width
+	\ifdim\dimen@<\p@
+\typeout{***\the\dimen@***}%
+		%\null\penalty\z@
+		\dimen@\dimen@ii
+	\fi
+	\halz@surrounding
+	%
+  \vbadness\maxdimen
+	\vfuzz\maxdimen
+  \let\fontsubfuzz\maxdimen
+  \parindent\z@
+	\leftskip\z@
+	\rightskip\z@
+	\splittopskip\z@
+  \edef\x{\noexpand\everypar{{\setbox\z@\lastbox}\the\everypar}}\x
+  \linespread\@ne
+	\fontsize{\dimen6}{1.1\dimen6}\selectfont
+	%
+	\setbox\z@\hbox{#1}%
+	\ifdim\dimen@<.5\wd\z@
+		\halz@first@two{#1}\dimen@
+	\else
+		\setbox\z@\vbox{\hsize\maxdimen #1}%
+		\halz@remaining
+	\fi
+	\unpenalty
+  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuclosing}% closing
+  \halz@surrounding
+  \endgroup
+}
+\def\halz@surrounding{% typeset halzuopening/halzuclosing
+  \ifdim\ht6>\z@
+    \raise\dimexpr\halzuraise\relax\copy6
+  \else
+    \begingroup\unhcopy6\endgroup
+  \fi
+}
+\def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
+  \setbox\z@\vbox{\hsize #2\emergencystretch.2em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
+  \setbox\tw@\vsplit\z@ to\tw@\baselineskip
+  \halz@typeset{\unvbox\tw@}{\wd\tw@}%
+  \penalty\z@
+  \halz@remaining
+}
+\def\halz@remaining{% #1: vbox number
+  \setbox\z@\hbox{%
+    \loop
+      \setbox\tw@\vsplit\z@ to\baselineskip
+      \unless\ifvoid\tw@
+        \setbox\tw@\vbox{\unvbox\tw@\global\setbox\@ne\lastbox}%
+        \unhbox\@ne\unskip
+    \repeat
+    \unskip\unpenalty
+  }%
+  \dimen@ 0.5\wd\z@ % check the maximum width of each line.
+  \dimen4 \wd\z@    % check the minimum width of each line.
+  \count@ \z@       % check the number of lines
+  \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\dimen@\unhcopy\z@}%
+  \loop
+    \setbox4\vsplit\tw@ to\baselineskip
+    \unless\ifvoid4
+      \advance\count@\@ne
+      \setbox4\vbox{\unvbox4\global\setbox\@ne\lastbox}%
+      \setbox4\hbox{\unhbox\@ne}%
+      \ifdim\wd4>\dimen@ \dimen@\wd4 \fi
+      \ifdim\wd4<\dimen4 \dimen4\wd4 \fi
+  \repeat
+  \ifdim\dimen@>\z@
+    \ifnum\count@>\tw@ \advance\dimen@\dimen4 \fi
+    \ifdim\dimen@ii<\dimen@
+      \halz@first@two{\unhbox\z@}\dimen@ii
+    \else
+      \halz@typeset{\unhbox\z@
+        \ifnum\count@<\tw@ \ifdim\ht\z@<\baselineskip \break \fi\fi
+      }\dimen@
+    \fi
+  \fi
+}
+\def\halz@typeset#1#2{% 1: contents; 2: width,
+  \setbox4\hbox{\hsize#2$\vcenter{\halz@centering #1}$}%
+  \raise.5\dimexpr
+    \ifdim\ht6>\z@
+      \ht6 -\dp6 -\ht4 +\dp4
+    \else
+      \dimen8
+    \fi +\tw@\dimexpr\halzuraise\relax\relax
+    \box4
+}
+\let\halzuraise\z@
+\def\halzusize{0.7}
+\def\halzuopening{\char40}
+\def\halzuclosing{\char41}

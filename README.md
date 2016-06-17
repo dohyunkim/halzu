@@ -5,17 +5,11 @@ A LaTeX package for typesetting "split annotation" (Halzu, 할주, 割註, Waric
 a traditional CJK typographic convention of typesetting various notes in small
 double lines. It is (or was) frequently used, among others, in law books.
 
-The package requires:
-
-- pdfTeX, XeTeX, or LuaTeX engine
-- LaTeX format
-- `zref-savepos` package
-
 ## Usage
 
 In preamble:
 ```
-\usepackage{halzu}
+\usepackage{halzu2}
 ```
 and in the body of document:
 ```
@@ -46,19 +40,12 @@ These commands define surrounding characters that will be typeset at
 the beginning and ending of Halzu box. Ascii parentheses are default.
 Empty values are also acceptable.
 
-```
-\halzuonebyonetrue
-\halzuonebyonefalse
-```
-If `true`, Halzu commands will be processed sequentially---one at this
-compile round, another at next.  Default is `false`.
-
 ## Example
 
 ```
 \documentclass[a4paper,12pt]{article}
 \usepackage[hangul]{kotex}
-\setmainfont{Source Han Sans K}[UprightFont=* Normal,BoldFont=* Bold]
+\setmainfont{Noto Sans CJK KR}
 \usepackage{halzu}
 \def\halzuopening{\hskip.125em}
 \let\halzuclosing\halzuopening
