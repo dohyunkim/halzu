@@ -1,70 +1,71 @@
 \ProvidesPackage{halzu2}[2016/06/17 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
 \protected\def\halzu#1#{%
   \begingroup
-	\dimen8=1ex % dimen8 = 1ex of document font
+  \dimen8=1ex % dimen8 = 1ex of document font
   \dimen6=\halzusize\dimexpr\f@size\p@\relax % dimen6 = halzu font size
   \dimen@ii\dimexpr\linewidth-\leftskip-\rightskip\relax % dimen2 = line width
   \parskip\z@
-	% get current horiz. position -> dimen1
-	\begingroup
+  % get current horiz. position -> @tempdima
+  \begingroup
   \parfillskip\z@ plus 1fil\relax
   \predisplaypenalty\@M
   \postdisplaypenalty\@M
   \abovedisplayshortskip\z@
   \belowdisplayshortskip\z@
-	\abovedisplayskip\z@
-	\belowdisplayskip\z@
-  $$\global\dimen\@ne\predisplaysize$$%
+  \abovedisplayskip\z@
+  \belowdisplayskip\z@
+  $$\global\@tempdima\predisplaysize$$%
   \vskip-2\baselineskip
   \noindent
-	\ifdim\dimen\@ne>\dimexpr\dimen@ii+2em\relax % already full
-		\break
-		\global\dimen\@ne\dimen@ii
-	\else\ifdim\dimen\@ne<\z@  % empty line
-		\break
-		\global\dimen\@ne\dimen@ii
-	\else
-		\global\advance\dimen\@ne -2em
-		\kern\dimen\@ne
-	\fi\fi
-	\endgroup
-	% get command option
-	\ifx\empty#1\empty
-		\let\halz@centering\relax
-	\else
-		\let\halz@centering\centering
-	\fi
-	\halz@halzu
+  \ifdim\@tempdima<\z@  % empty line
+    \break
+    \global\@tempdima\dimen@ii
+  \else
+    \global\advance\@tempdima -2em
+    \ifdim\@tempdima>\dimen@ii % already full
+      \break
+      \global\@tempdima\dimen@ii
+    \else
+      \kern\@tempdima %plus .5\dimen6\relax
+    \fi
+  \fi
+  \endgroup
+  % get command option
+  \ifx\empty#1\empty
+    \let\halz@centering\relax
+  \else
+    \let\halz@centering\centering
+  \fi
+  \halz@halzu
 }
 \def\halz@halzu#1{%
   \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuopening}% opening
-  \dimen@\dimexpr\dimen@ii-\dimen\@ne-\wd6\relax % dimen0 = remaining width
-	\ifdim\dimen@<\p@
-\typeout{***\the\dimen@***}%
-		%\null\penalty\z@
-		\dimen@\dimen@ii
-	\fi
-	\halz@surrounding
-	%
+  \dimen@\dimexpr\dimen@ii-\@tempdima-\wd6\relax % dimen0 = remaining width
+  \ifdim\dimen@<\p@
+    \allowbreak
+    \dimen@\dimen@ii
+  \fi
+  \halz@surrounding
+  %
   \vbadness\maxdimen
-	\vfuzz\maxdimen
+  \vfuzz\maxdimen
   \let\fontsubfuzz\maxdimen
   \parindent\z@
-	\leftskip\z@
-	\rightskip\z@
-	\splittopskip\z@
+  \leftskip\z@
+  \rightskip\z@
+  \splittopskip\z@
   \edef\x{\noexpand\everypar{{\setbox\z@\lastbox}\the\everypar}}\x
   \linespread\@ne
-	\fontsize{\dimen6}{1.1\dimen6}\selectfont
-	%
-	\setbox\z@\hbox{#1}%
-	\ifdim\dimen@<.5\wd\z@
-		\halz@first@two{#1}\dimen@
-	\else
-		\setbox\z@\vbox{\hsize\maxdimen #1}%
-		\halz@remaining
-	\fi
-	\unpenalty
+  \fontsize{\dimen6}{1.1\dimen6}\selectfont
+  %
+  \setbox\z@\hbox{#1}%
+  \ifdim\dimen@<.5\wd\z@
+    \halz@first@two{#1}\dimen@
+  \else
+    \setbox\z@\vbox{\hsize\maxdimen #1}%
+    \halz@remaining
+  \fi
+  \unpenalty
   \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuclosing}% closing
   \halz@surrounding
   \endgroup
@@ -80,7 +81,7 @@
   \setbox\z@\vbox{\hsize #2\emergencystretch.2em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
   \setbox\tw@\vsplit\z@ to\tw@\baselineskip
   \halz@typeset{\unvbox\tw@}{\wd\tw@}%
-  \penalty\z@
+  \allowbreak
   \halz@remaining
 }
 \def\halz@remaining{% #1: vbox number
