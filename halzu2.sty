@@ -23,7 +23,7 @@
     \global\advance\@tempdima -2em
     \global\advance\@tempdima -\leftskip
     \ifnum\parshape>\z@
-      \global\advance\@tempdima -\leftmargin
+      \global\advance\@tempdima -\@totalleftmargin
     \fi
     \ifdim\@tempdima>\dimen@ii % already full
       \global\@tempdima\dimen@ii
