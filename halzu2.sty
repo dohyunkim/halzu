@@ -18,15 +18,16 @@
   \vskip-2\baselineskip
   \noindent
   \ifdim\@tempdima<\z@  % empty line
-    \break
+    \penalty-\@M
     \global\@tempdima\dimen@ii
   \else
     \global\advance\@tempdima -2em
     \ifdim\@tempdima>\dimen@ii % already full
-      \break
+      \penalty-\@M
       \global\@tempdima\dimen@ii
     \else
-      \kern\@tempdima %plus .5\dimen6\relax
+      \kern\@tempdima
+      \penalty\z@
     \fi
   \fi
   \endgroup
@@ -39,13 +40,11 @@
   \halz@halzu
 }
 \def\halz@halzu#1{%
-  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuopening}% opening
+  \halz@surrounding\halzuopening
   \dimen@\dimexpr\dimen@ii-\@tempdima-\wd6\relax % dimen0 = remaining width
   \ifdim\dimen@<\p@
-    \allowbreak
     \dimen@\dimen@ii
   \fi
-  \halz@surrounding
   %
   \vbadness\maxdimen
   \vfuzz\maxdimen
@@ -66,11 +65,11 @@
     \halz@remaining
   \fi
   \unpenalty
-  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuclosing}% closing
-  \halz@surrounding
+  \halz@surrounding\halzuclosing
   \endgroup
 }
-\def\halz@surrounding{% typeset halzuopening/halzuclosing
+\def\halz@surrounding#1{% typeset halzuopening/halzuclosing
+  \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont #1}%
   \ifdim\ht6>\z@
     \raise\dimexpr\halzuraise\relax\copy6
   \else
@@ -81,7 +80,7 @@
   \setbox\z@\vbox{\hsize #2\emergencystretch.2em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
   \setbox\tw@\vsplit\z@ to\tw@\baselineskip
   \halz@typeset{\unvbox\tw@}{\wd\tw@}%
-  \allowbreak
+  \penalty\z@
   \halz@remaining
 }
 \def\halz@remaining{% #1: vbox number
@@ -113,7 +112,7 @@
       \halz@first@two{\unhbox\z@}\dimen@ii
     \else
       \halz@typeset{\unhbox\z@
-        \ifnum\count@<\tw@ \ifdim\ht\z@<\baselineskip \break \fi\fi
+        \ifnum\count@<\tw@ \ifdim\ht\z@<\baselineskip \penalty-\@M \fi\fi
       }\dimen@
     \fi
   \fi
