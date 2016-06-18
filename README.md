@@ -46,8 +46,8 @@ Empty values are also acceptable.
 \documentclass[a4paper,12pt]{article}
 \usepackage[hangul]{kotex}
 \setmainfont{Noto Sans CJK KR}
-\usepackage{halzu}
-\def\halzuopening{\hskip.125em}
+\usepackage{halzu2}
+\def\halzuopening{\hskip\smallskipamount}
 \let\halzuclosing\halzuopening
 \def\halzusize{0.6}
 \begin{document}
