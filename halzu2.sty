@@ -49,6 +49,34 @@
         \advance\@tempdima -\leftskip
         \ifnum\parshape=\@ne % for list env
           \advance\@tempdima -\@totalleftmargin
+        \else
+          \ifnum\parshape=\z@ % for hangindent
+            \ifdim\hangindent>\z@
+              \ifnum\hangafter<\z@
+                \ifnum\@tempcnta>-\hangafter
+                \else
+                  \advance\@tempdima -\hangindent
+                \fi
+              \else
+                \ifnum\@tempcnta>\hangafter
+                  \advance\@tempdima -\hangindent
+                \fi
+              \fi
+            \else
+              \ifdim\hangindent<\z@
+                \ifnum\hangafter<\z@
+                  \ifnum\@tempcnta>-\hangafter
+                  \else
+                    \advance\dimen@ii +\hangindent
+                  \fi
+                \else
+                  \ifnum\@tempcnta>\hangafter
+                    \advance\dimen@ii +\hangindent
+                  \fi
+                \fi
+              \fi
+            \fi
+          \fi
         \fi
         \ifdim\@tempdima>\dimen@ii % already full
           \@tempdima\dimen@ii

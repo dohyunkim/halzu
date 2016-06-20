@@ -66,10 +66,10 @@ Empty values are also acceptable.
 
 ## Caveat
 
-*halzu2* does not support `\parshape` or `\hangindent` paragraph,
+*halzu2* does not support `\parshape` paragraph,
 with the exception of LaTeX's `list` environment
-such as `itemize` `enumerate` `description` or `quote`.
-If you really need to typeset halzu with `\parshape` or `\hangindent`,
+such as `itemize` `enumerate` `description` `quote` or `verse`.
+If you really need to typeset halzu with `\parshape`,
 please try *halzu* package (in such a case `\halzuonebyonetrue` is recommended)
 instead of *halzu2*.
 
