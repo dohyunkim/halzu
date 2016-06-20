@@ -1,5 +1,5 @@
 
-# halzu
+# halzu2
 
 A LaTeX package for typesetting "split annotation" (Halzu, 할주, 割註, Warichu),
 a traditional CJK typographic convention of typesetting various notes in small
@@ -63,6 +63,15 @@ Empty values are also acceptable.
 移徙者五年內還則還給執耕者元無田則還給三分之二}
 \end{document}
 ```
+
+## Caveat
+
+*halzu2* does not support `\parshape` or `\hangindent` paragraph,
+with the exception of LaTeX's `list` environment
+such as `itemize` `enumerate` `description` or `quote`.
+If you really need to typeset halzu with `\parshape` or `\hangindent`,
+please try *halzu* package (in such a case `\halzuonebyonetrue` is recommended)
+instead of *halzu2*.
 
 ## License
 
