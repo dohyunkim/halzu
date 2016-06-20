@@ -14,7 +14,9 @@
   \belowdisplayshortskip\z@
   \abovedisplayskip\z@
   \belowdisplayskip\z@
-  $$\global\@tempdima\predisplaysize$$%
+  \leavevmode\null % respect preceding glue
+  $$\global\@tempdima\predisplaysize
+    \global\@tempcnta\prevgraf$$%
   \vskip-2\baselineskip
   \noindent
   \ifdim\@tempdima<\z@  % empty line
@@ -22,7 +24,7 @@
   \else
     \global\advance\@tempdima -2em
     \global\advance\@tempdima -\leftskip
-    \ifnum\parshape>\z@
+    \ifnum\parshape=\@ne % for list env
       \global\advance\@tempdima -\@totalleftmargin
     \fi
     \ifdim\@tempdima>\dimen@ii % already full
@@ -73,6 +75,7 @@
   \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuclosing}% closing
   \halz@surrounding
   \endgroup
+  \prevgraf\numexpr\@tempcnta-1\relax
 }
 \def\halz@surrounding{% typeset halzuopening/halzuclosing
   \ifdim\ht6>\z@
@@ -116,9 +119,7 @@
     \ifdim\dimen@ii<\dimen@
       \halz@first@two{\unhbox\z@}\dimen@ii
     \else
-      \halz@typeset{\unhbox\z@
-        \ifnum\count@<\tw@ \ifdim\ht\z@<\baselineskip \penalty-\@M \fi\fi
-      }\dimen@
+      \halz@typeset{\unhbox\z@}\dimen@
     \fi
   \fi
 }
