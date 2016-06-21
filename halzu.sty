@@ -19,6 +19,7 @@
   \dimen6 \halzusize\dimexpr\f@size\p@\relax % dimen6 = halzu font size
   \vbadness\maxdimen \vfuzz\maxdimen \splittopskip\z@
   \parindent\z@ \leftskip\z@ \rightskip\z@
+  \clubpenalty\z@
   \everypar{{\setbox\z@\lastbox}}%
   \let\fontsubfuzz\maxdimen
   \linespread\@ne \fontsize{\dimen6}{1.1\dimen6}\selectfont
@@ -96,9 +97,7 @@
     \ifdim\dimen@ii<\dimen@
       \halz@first@two{\unhbox\z@}\dimen@ii
     \else
-      \halz@typeset{\unhbox\z@
-        \ifnum\count@<\tw@ \ifdim\ht\z@<\baselineskip \break \fi\fi
-      }\dimen@
+      \halz@typeset{\unhbox\z@}\dimen@
     \fi
   \fi
 }
