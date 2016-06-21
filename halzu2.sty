@@ -56,10 +56,12 @@
                 \ifnum\@tempcnta>-\hangafter
                 \else
                   \advance\@tempdima -\hangindent
+                  \advance\dimen@ii  -\hangindent
                 \fi
               \else
                 \ifnum\@tempcnta>\hangafter
                   \advance\@tempdima -\hangindent
+                  \advance\dimen@ii  -\hangindent
                 \fi
               \fi
             \else
@@ -67,11 +69,11 @@
                 \ifnum\hangafter<\z@
                   \ifnum\@tempcnta>-\hangafter
                   \else
-                    \advance\dimen@ii +\hangindent
+                    \advance\dimen@ii \hangindent
                   \fi
                 \else
                   \ifnum\@tempcnta>\hangafter
-                    \advance\dimen@ii +\hangindent
+                    \advance\dimen@ii \hangindent
                   \fi
                 \fi
               \fi
