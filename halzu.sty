@@ -19,7 +19,7 @@
   \dimen6 \halzusize\dimexpr\f@size\p@\relax % dimen6 = halzu font size
   \vbadness\maxdimen \vfuzz\maxdimen \splittopskip\z@
   \parindent\z@ \leftskip\z@ \rightskip\z@
-  \edef\x{\noexpand\everypar{{\setbox\z@\lastbox}\the\everypar}}\x
+  \everypar{{\setbox\z@\lastbox}}%
   \let\fontsubfuzz\maxdimen
   \linespread\@ne \fontsize{\dimen6}{1.1\dimen6}\selectfont
   \penalty\z@
@@ -118,3 +118,4 @@
 \def\halzuclosing{\char41}
 \def\halzuonebyonetrue {\global\let\halz@savepos\@ne \let\halz@onebyone\@ne}
 \def\halzuonebyonefalse{\global\let\halz@savepos\@ne \let\halz@onebyone\z@}
+\def\halzuonebyone{\everypar\expandafter{\the\everypar\halzuonebyonetrue}}
