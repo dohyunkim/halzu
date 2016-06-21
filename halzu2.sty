@@ -105,7 +105,7 @@
   \leftskip\z@
   \rightskip\z@
   \splittopskip\z@
-  \edef\x{\noexpand\everypar{{\setbox\z@\lastbox}\the\everypar}}\x
+  \everypar{{\setbox\z@\lastbox}}%
   \linespread\@ne
   \fontsize{\dimen6}{1.1\dimen6}\selectfont
   %
