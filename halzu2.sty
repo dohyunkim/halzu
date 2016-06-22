@@ -1,11 +1,18 @@
 \ProvidesPackage{halzu2}[2016/06/17 v0.5 Halzu, 할주, 割註, Warichu, split annotation]
+\def\halzucentering{%
+  \leftskip\z@ plus2em\relax
+  \rightskip\leftskip
+  \parindent\z@
+  \parfillskip\z@skip
+}
 \protected\def\halzu#1#{%
   \begingroup
   % get command option
   \ifx\empty#1\empty
     \let\halz@centering\relax
   \else
-    \let\halz@centering\centering
+    \let\halz@centering\halzucentering
+    \let\\\break
   \fi
   \halz@halzu
 }
@@ -22,68 +29,70 @@
     -\leftskip-\rightskip\relax % dimen2 = line width
   \parskip\z@
   % get current horiz. position -> @tempdima
-  \ifinner
-    \@tempdima\z@
-  \else
-    \ifmmode
-      \@tempdima\z@
-    \else
-      \begingroup
-      \parfillskip\z@ plus 1fil\relax
-      \predisplaypenalty\@M
-      \postdisplaypenalty\@M
-      \abovedisplayshortskip\z@
-      \belowdisplayshortskip\z@
-      \abovedisplayskip\z@
-      \belowdisplayskip\z@
-      \null % respect preceding glue
-      $$\global\@tempdima\predisplaysize
-        \global\@tempcnta\prevgraf$$%
-      \vskip-2\baselineskip
-      \noindent
-      \endgroup
-      \ifdim\@tempdima<\z@  % empty line
-        \@tempdima\dimen@ii
-      \else
-        \advance\@tempdima -2em
-        \advance\@tempdima -\leftskip
-        \ifnum\parshape=\@ne % for list env
-          \advance\@tempdima -\@totalleftmargin
+  \@tempdima\z@
+  \global\@tempcnta\z@ % to store prevgraf
+  \ifinner \else
+    \ifmmode \else
+      \edef\@tempa{\the\leftskip}%
+      \edef\@tempb{\the\@flushglue}%
+      \ifx\@tempa\@tempb \else % not in centering/raggedleft
+        \begingroup
+        \parfillskip\z@ plus 1fil\relax
+        \predisplaypenalty\@M
+        \postdisplaypenalty\@M
+        \abovedisplayshortskip\z@
+        \belowdisplayshortskip\z@
+        \abovedisplayskip\z@
+        \belowdisplayskip\z@
+        \null % respect preceding glue
+        $$\global\@tempdima\predisplaysize
+          \global\@tempcnta\prevgraf$$%
+        \vskip-2\baselineskip
+        \noindent
+        \endgroup
+        \ifdim\@tempdima<\z@  % empty line
+          \@tempdima\dimen@ii
         \else
-          \ifnum\parshape=\z@ % for hangindent
-            \ifdim\hangindent>\z@
-              \ifnum\hangafter<\z@
-                \ifnum\@tempcnta>-\hangafter
-                \else
-                  \advance\@tempdima -\hangindent
-                  \advance\dimen@ii  -\hangindent
-                \fi
-              \else
-                \ifnum\@tempcnta>\hangafter
-                  \advance\@tempdima -\hangindent
-                  \advance\dimen@ii  -\hangindent
-                \fi
-              \fi
-            \else
-              \ifdim\hangindent<\z@
+          \advance\@tempdima -2em
+          \advance\@tempdima -\leftskip
+          \ifnum\parshape=\@ne % for list env
+            \advance\@tempdima -\@totalleftmargin
+          \else
+            \ifnum\parshape=\z@ % for hangindent
+              \ifdim\hangindent>\z@
                 \ifnum\hangafter<\z@
                   \ifnum\@tempcnta>-\hangafter
                   \else
-                    \advance\dimen@ii \hangindent
+                    \advance\@tempdima -\hangindent
+                    \advance\dimen@ii  -\hangindent
                   \fi
                 \else
                   \ifnum\@tempcnta>\hangafter
-                    \advance\dimen@ii \hangindent
+                    \advance\@tempdima -\hangindent
+                    \advance\dimen@ii  -\hangindent
+                  \fi
+                \fi
+              \else
+                \ifdim\hangindent<\z@
+                  \ifnum\hangafter<\z@
+                    \ifnum\@tempcnta>-\hangafter
+                    \else
+                      \advance\dimen@ii \hangindent
+                    \fi
+                  \else
+                    \ifnum\@tempcnta>\hangafter
+                      \advance\dimen@ii \hangindent
+                    \fi
                   \fi
                 \fi
               \fi
             \fi
           \fi
-        \fi
-        \ifdim\@tempdima>\dimen@ii % already full
-          \@tempdima\dimen@ii
-        \else
-          \kern\@tempdima
+          \ifdim\@tempdima>\dimen@ii % already full
+            \@tempdima\dimen@ii
+          \else
+            \kern\@tempdima
+          \fi
         \fi
       \fi
     \fi
@@ -121,10 +130,8 @@
   \setbox6\hbox{\fontsize{2.1\dimen6}\z@\selectfont\halzuclosing}% closing
   \halz@surrounding
   \endgroup
-  \ifinner \else
-    \ifmmode \else
-      \prevgraf\numexpr\@tempcnta-1\relax
-    \fi
+  \ifnum\@tempcnta>\z@
+    \prevgraf\numexpr\@tempcnta-1\relax
   \fi
 }
 \def\halz@surrounding{% typeset halzuopening/halzuclosing
@@ -174,10 +181,12 @@
   \fi
 }
 \def\halz@typeset#1#2{% 1: contents; 2: width,
-  \setbox4\hbox{\hsize#2$\vcenter{\halz@centering #1}$}%
+  \setbox4\vbox{\hsize#2\halz@centering #1}%
+  \ht4=.5\dimexpr\ht4+\dp4\relax
+  \dp4=\ht4
   \raise.5\dimexpr
     \ifdim\ht6>\z@
-      \ht6 -\dp6 -\ht4 +\dp4
+      \ht6 -\dp6
     \else
       \dimen8
     \fi +\tw@\dimexpr\halzuraise\relax\relax
