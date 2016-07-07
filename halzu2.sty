@@ -142,7 +142,7 @@
   \fi
 }
 \def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
-  \setbox\z@\vbox{\hsize #2\emergencystretch.2em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
+  \setbox\z@\vbox{\hsize #2\emergencystretch.25em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
   \setbox\tw@\vsplit\z@ to\tw@\baselineskip
   \halz@typeset{\unvbox\tw@}{\wd\tw@}%
   \penalty\z@
