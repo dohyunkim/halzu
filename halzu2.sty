@@ -1,19 +1,43 @@
 \NeedsTeXFormat{LaTeX2e}[2021/06/01]
 \ProvidesPackage{halzu2}[2021/06/22 v0.6 Halzu, 할주, 割註, Warichu, split annotation]
 \RequirePackage{iftex}
+\ifluatex
+  \def\halzu@file@mod{\directlua{
+    local file = token.scan_string()
+    file = kpse.find_file(file)
+    tex.sprint(tostring(lfs.attributes(file,"modification")))
+  }}
+  \def\halzu@str@cmp{\directlua{
+    local a = token.scan_string()
+    local b = token.scan_string()
+    if a == b then
+      tex.sprint"0"
+    elseif a < b then
+      tex.sprint"-1"
+    else
+      tex.sprint"1"
+    end
+  }}
+\else \ifxetex
+  \let\halzu@file@mod\filemoddate
+  \let\halzu@str@cmp\strcmp
+\else
+  \let\halzu@file@mod\pdffilemoddate
+  \let\halzu@str@cmp\pdfstrcmp
+\fi\fi
 \newcount\halzu@count@
-\def\halzucentering{%
-  \leftskip\z@ plus2em\relax
-  \rightskip\leftskip
-  \parindent\z@
-  \parfillskip\z@skip
-}
 \def\halzu@write@aux{%
   \immediate\write\@mainaux{%
     \string\expandafter\gdef
     \string\csname\detokenize{ }halzu@prev@\the\halzu@count@\string\endcsname
     {\the\@tempdima}%
   }%
+}
+\def\halzucentering{%
+  \leftskip\z@ plus2em\relax
+  \rightskip\leftskip
+  \parindent\z@
+  \parfillskip\z@skip
 }
 \protected\def\halzu#1#{%
   \begingroup
@@ -26,28 +50,6 @@
   \fi
   \halz@halzu
 }
-\ifluatex
-  \def\halzu@file@mod{\directlua{
-    local file = token.scan_string()
-    file = kpse.find_file(file)
-    tex.sprint(lfs.attributes(file,"modification"))
-  }}
-  \def\halzu@str@cmp{\directlua{
-    local a = token.scan_string()
-    local b = token.scan_string()
-    if a == b then
-      tex.sprint"0"
-    else
-      tex.sprint"1"
-    end
-  }}
-\else \ifxetex
-  \let\halzu@file@mod\filemoddate
-  \let\halzu@str@cmp\strcmp
-\else
-  \let\halzu@file@mod\pdffilemoddate
-  \let\halzu@str@cmp\pdfstrcmp
-\fi\fi
 \def\halz@halzu#1{%
   \leavevmode
   %>>
