@@ -25,9 +25,10 @@
   \let\halzu@file@mod\pdffilemoddate
   \let\halzu@str@cmp\pdfstrcmp
 \fi\fi
+\AddToHook{include/after}{\let\CurrentFile\empty \let\CurrentFilePath\empty}
 \newcount\halzu@count@
 \def\halzu@write@aux{%
-  \immediate\write\@mainaux{%
+  \immediate\write\@auxout{%
     \string\expandafter\gdef
     \string\csname\detokenize{ }halzu@prev@\the\halzu@count@\string\endcsname
     {\the\@tempdima}%
@@ -60,7 +61,7 @@
     \expandafter\xdef\csname halzu@curr@mod@\halzu@curr@file\endcsname{%
       \halzu@file@mod{\halzu@curr@file}}%
     \if@filesw
-      \immediate\write\@mainaux{%
+      \immediate\write\@auxout{%
         \string\expandafter\gdef
         \string\csname\detokenize{ }halzu@prev@mod@\halzu@curr@file\string\endcsname
         {\csname halzu@curr@mod@\halzu@curr@file\endcsname}}%
