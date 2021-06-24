@@ -53,21 +53,23 @@
 \def\halz@halzu#1{%
   \leavevmode
   %>>
-  \ifx\CurrentFile\empty \edef\CurrentFile{\jobname.tex}\fi
-  \ifcsname halzu@curr@mod@\CurrentFile\endcsname\else
-    \expandafter\xdef\csname halzu@curr@mod@\CurrentFile\endcsname{\halzu@file@mod{\CurrentFile}}%
+  \edef\halzu@curr@file{%
+    \ifx\CurrentFilePath\empty\else \CurrentFilePath/\fi
+    \ifx\CurrentFile\empty \jobname.tex\else\CurrentFile\fi }%
+  \ifcsname halzu@curr@mod@\halzu@curr@file\endcsname\else
+    \expandafter\xdef\csname halzu@curr@mod@\halzu@curr@file\endcsname{%
+      \halzu@file@mod{\halzu@curr@file}}%
     \if@filesw
       \immediate\write\@mainaux{%
         \string\expandafter\gdef
-        \string\csname\detokenize{ }halzu@prev@mod@\CurrentFile\string\endcsname
-        {\csname halzu@curr@mod@\CurrentFile\endcsname}%
-      }%
+        \string\csname\detokenize{ }halzu@prev@mod@\halzu@curr@file\string\endcsname
+        {\csname halzu@curr@mod@\halzu@curr@file\endcsname}}%
     \fi
   \fi
   \global\advance\halzu@count@\@ne
   \ifcsname halzu@prev@\the\halzu@count@\endcsname
-    \ifnum\halzu@str@cmp{\csname halzu@prev@mod@\CurrentFile\endcsname}%
-                        {\csname halzu@curr@mod@\CurrentFile\endcsname}=\z@
+    \ifnum\halzu@str@cmp{\csname halzu@prev@mod@\halzu@curr@file\endcsname}%
+                        {\csname halzu@curr@mod@\halzu@curr@file\endcsname}=\z@
       \penalty-\@M
     \fi
   \fi
