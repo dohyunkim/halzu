@@ -30,8 +30,10 @@
   \global\advance\halzu@count@\@ne
   \@tempcntb=\m@ne % to detect change of pre-halzu line using badness
   \ifcsname halzu@prev@badness@\the\halzu@count@\endcsname
+    \skip@\parfillskip
     \parfillskip\z@skip\RawParEnd
     \@tempcntb=\badness
+    \parfillskip\skip@
     \RawNoindent
   \fi
   %<<
