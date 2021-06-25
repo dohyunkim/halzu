@@ -1,38 +1,11 @@
 \NeedsTeXFormat{LaTeX2e}[2021/06/01]
 \ProvidesPackage{halzu2}[2021/06/22 v0.6 Halzu, 할주, 割註, Warichu, split annotation]
-\RequirePackage{iftex}
-\ifluatex
-  \def\halzu@file@mod{\directlua{
-    local file = token.scan_string()
-    file = kpse.find_file(file)
-    tex.sprint(tostring(lfs.attributes(file,"modification")))
-  }}
-  \def\halzu@str@cmp{\directlua{
-    local a = token.scan_string()
-    local b = token.scan_string()
-    if a == b then
-      tex.sprint"0"
-    elseif a < b then
-      tex.sprint"-1"
-    else
-      tex.sprint"1"
-    end
-  }}
-\else \ifxetex
-  \let\halzu@file@mod\filemoddate
-  \let\halzu@str@cmp\strcmp
-\else
-  \let\halzu@file@mod\pdffilemoddate
-  \let\halzu@str@cmp\pdfstrcmp
-\fi\fi
-\AddToHook{include/after}{\let\CurrentFile\empty \let\CurrentFilePath\empty}
 \newcount\halzu@count@
 \def\halzu@write@aux{%
   \immediate\write\@auxout{%
     \string\expandafter\gdef
-    \string\csname\detokenize{ }halzu@prev@\the\halzu@count@\string\endcsname
-    {\the\@tempdima}%
-  }%
+    \string\csname\detokenize{ }halzu@prev@badness@\the\halzu@count@\string\endcsname
+    {\the\@tempcntb}}%
 }
 \def\halzucentering{%
   \leftskip\z@ plus2em\relax
@@ -54,25 +27,12 @@
 \def\halz@halzu#1{%
   \leavevmode
   %>>
-  \edef\halzu@curr@file{%
-    \ifx\CurrentFilePath\empty\else \CurrentFilePath/\fi
-    \ifx\CurrentFile\empty \jobname.tex\else\CurrentFile\fi }%
-  \ifcsname halzu@curr@mod@\halzu@curr@file\endcsname\else
-    \expandafter\xdef\csname halzu@curr@mod@\halzu@curr@file\endcsname{%
-      \halzu@file@mod{\halzu@curr@file}}%
-    \if@filesw
-      \immediate\write\@auxout{%
-        \string\expandafter\gdef
-        \string\csname\detokenize{ }halzu@prev@mod@\halzu@curr@file\string\endcsname
-        {\csname halzu@curr@mod@\halzu@curr@file\endcsname}}%
-    \fi
-  \fi
   \global\advance\halzu@count@\@ne
-  \ifcsname halzu@prev@\the\halzu@count@\endcsname
-    \ifnum\halzu@str@cmp{\csname halzu@prev@mod@\halzu@curr@file\endcsname}%
-                        {\csname halzu@curr@mod@\halzu@curr@file\endcsname}=\z@
-      \penalty-\@M
-    \fi
+  \@tempcntb=\m@ne % to detect change of pre-halzu line using badness
+  \ifcsname halzu@prev@badness@\the\halzu@count@\endcsname
+    \parfillskip\z@skip\RawParEnd
+    \@tempcntb=\badness
+    \RawNoindent
   \fi
   %<<
   \dimen8=1ex % dimen8 = 1ex of document font
@@ -106,7 +66,7 @@
         $$\global\@tempdima\predisplaysize
           \global\@tempcnta\prevgraf$$%
         \vskip-2\baselineskip
-        \noindent
+        \RawNoindent
         \endgroup
         \ifdim\@tempdima<\z@  % empty line
           \@tempdima\dimen@ii
@@ -171,11 +131,15 @@
   \else
     %>>
     \if@filesw
-      \ifcsname halzu@prev@\the\halzu@count@\endcsname
-        \ifdim\@tempdima>\z@
-          \PackageWarning{halzu2}{Rerun for justification!}%
-        \else
+      \ifcsname halzu@prev@badness@\the\halzu@count@\endcsname
+        \expandafter\ifnum\csname halzu@prev@badness@\the\halzu@count@\endcsname<\z@
           \halzu@write@aux
+        \else
+          \expandafter\ifnum\csname halzu@prev@badness@\the\halzu@count@\endcsname=\@tempcntb
+            \halzu@write@aux
+          \else
+            \PackageWarning{halzu2}{Rerun for justification!}%
+          \fi
         \fi
       \fi
     \fi
@@ -200,7 +164,7 @@
   \ifdim\dimen@<.5\wd\z@
     \halz@first@two{#1}\dimen@
   \else
-    \setbox\z@\vbox{\hsize\maxdimen #1}%
+    \setbox\z@\vbox{\hsize\maxdimen #1\par}%
     \halz@remaining
   \fi
   \unpenalty
@@ -219,7 +183,7 @@
   \fi
 }
 \def\halz@first@two#1#2{% #1: contents; #2: width of first two lines
-  \setbox\z@\vbox{\hsize #2\emergencystretch.25em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1}%
+  \setbox\z@\vbox{\hsize #2\emergencystretch.25em \parshape\thr@@\z@#2\z@#2\z@\maxdimen #1\par}%
   \setbox\tw@\vsplit\z@ to\tw@\baselineskip
   \halz@typeset{\unvbox\tw@}{\wd\tw@}%
   \penalty\z@
@@ -251,9 +215,9 @@
   \ifdim\dimen@>\z@
     \ifnum\count@>\tw@ \advance\dimen@\dimen4 \fi
     \ifdim\dimen@ii<\dimen@
-      \halz@first@two{\unhbox\z@}\dimen@ii
+      \halz@first@two{\RawNoindent\unhbox\z@}\dimen@ii
     \else
-      \halz@typeset{\unhbox\z@}\dimen@
+      \halz@typeset{\RawNoindent\unhbox\z@}\dimen@
     \fi
   \fi
 }
