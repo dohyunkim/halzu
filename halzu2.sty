@@ -13,18 +13,11 @@
   \parindent\z@
   \parfillskip\z@skip
 }
-\protected\def\halzu#1#{%
+\DeclareDocumentCommand\halzu{ s m }{%
   \begingroup
-  % get command option
-  \ifx\empty#1\empty
-    \let\halz@centering\relax
-  \else
-    \let\halz@centering\halzucentering
-    \let\\\break
-  \fi
-  \halz@halzu
-}
-\def\halz@halzu#1{%
+  \IfBooleanTF{#1}
+    {\let\halz@centering\halzucentering \let\\\break }
+    {\let\halz@centering\relax }%
   \leavevmode
   %>>
   \global\advance\halzu@count@\@ne
@@ -162,11 +155,11 @@
   \linespread\@ne
   \fontsize{\dimen6}{1.1\dimen6}\selectfont
   %
-  \setbox\z@\hbox{#1}%
+  \setbox\z@\hbox{#2}%
   \ifdim\dimen@<.5\wd\z@
-    \halz@first@two{#1}\dimen@
+    \halz@first@two{#2}\dimen@
   \else
-    \setbox\z@\vbox{\hsize\maxdimen #1\par}%
+    \setbox\z@\vbox{\hsize\maxdimen #2\par}%
     \halz@remaining
   \fi
   \unpenalty
