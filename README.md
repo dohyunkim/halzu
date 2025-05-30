@@ -43,6 +43,7 @@ Empty values are also acceptable.
 ## Example
 
 ```latex
+% !TeX program = lualatex
 \documentclass[a5paper,12pt]{article}
 \usepackage[hangul]{kotex}
 \setmainfont{Noto Sans CJK KR}
