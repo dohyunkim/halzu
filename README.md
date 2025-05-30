@@ -29,7 +29,7 @@ makes all Halzu boxes move upwards by the amount specified.
 ```
 \def\halzusize{0.7}
 ```
-denotes the factor between the current document font size and the Halzu font.
+denotes the factor between the current document font size and the Halzu font size.
 The default value is `0.7`, the same as `scriptsize`.
 
 ```
@@ -42,17 +42,22 @@ Empty values are also acceptable.
 
 ## Example
 
-```
-\documentclass[a4paper,12pt]{article}
+```latex
+\documentclass[a5paper,12pt]{article}
 \usepackage[hangul]{kotex}
 \setmainfont{Noto Sans CJK KR}
+[
+  Renderer=OpenType,
+  Script=Hangul, Language=Korean,
+  CompressPunctuations, RemoveClassicSpaces,
+]
 \usepackage{halzu2}
 \def\halzuopening{\hskip\smallskipamount}
 \let\halzuclosing\halzuopening
 \def\halzusize{0.6}
+\typesetclassic
 \begin{document}
 \section*{\huge 經國大典}
-\Large \japanese \endlinechar-1
 【田宅】凡訟田宅過五年則勿聽
 \halzu{盜賣者相訟未決者父母田宅合執者因幷耕永執者賃居永執者不限年
 〇告狀而不立訟過五年者亦勿聽奴婢同}
