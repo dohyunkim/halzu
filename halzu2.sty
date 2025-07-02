@@ -218,11 +218,11 @@
       \ifdim\wd4<\dimen4 \dimen4\wd4 \fi
   \repeat
   \ifdim\dimen@>\z@
-    \ifnum\count@>\tw@ \advance\dimen@\dimen4 \fi
+    \ifnum\count@>\tw@ \advance\dimen@ .02\dimen4 \fi
     \ifdim\dimen@ii<\dimen@
       \halz@first@two{\RawNoindent\unhbox\z@}\dimen@ii
     \else
-      \halz@typeset{\RawNoindent\unhbox\z@}\dimen@
+      \halz@typeset{\hfuzz.2\dimen4\RawNoindent\unhbox\z@}\dimen@
     \fi
   \fi
 }
