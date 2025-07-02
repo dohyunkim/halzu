@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}[2021/06/01]
-\ProvidesPackage{halzu2}[2025/05/30 v0.7 Halzu, 할주, 割註, Warichu, split annotation]
+\ProvidesPackage{halzu2}[2025/07/02 v0.8 Halzu, 할주, 割註, Warichu, split annotation]
 \newcount\halzu@count@
 \def\halzu@write@aux{%
   \immediate\write\@auxout{%
@@ -204,10 +204,10 @@
     \repeat
     \unskip\unpenalty
   }%
-  \dimen@ 0.5\wd\z@ % check the maximum width of each line.
+  \dimen@ \z@       % check the maximum width of each line.
   \dimen4 \wd\z@    % check the minimum width of each line.
   \count@ \z@       % check the number of lines
-  \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\dimen@\unhcopy\z@}%
+  \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize.5\wd\z@ \raggedright \unhcopy\z@}%
   \loop
     \setbox4\vsplit\tw@ to\baselineskip
     \unless\ifvoid4
