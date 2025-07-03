@@ -43,7 +43,6 @@ Empty values are also acceptable.
 ## Example
 
 ```latex
-% !TeX program = lualatex
 \documentclass[a5paper,12pt]{article}
 \usepackage[hangul]{kotex}
 \setmainfont{Noto Sans CJK KR}
@@ -52,11 +51,12 @@ Empty values are also acceptable.
   Script=Hangul, Language=Korean,
   CompressPunctuations, RemoveClassicSpaces,
 ]
-\usepackage{halzu2}
+\usepackage{halzu2, iftex}
 \def\halzuopening{\hskip\smallskipamount}
 \let\halzuclosing\halzuopening
 \def\halzusize{0.6}
 \typesetclassic
+\ifxetex \removeclassicspaces \fi
 \begin{document}
 \section*{\huge 經國大典}
 【田宅】凡訟田宅過五年則勿聽

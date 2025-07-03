@@ -13,6 +13,11 @@
   \parindent\z@
   \parfillskip\z@skip
 }
+\def\halzuraggedright{%
+  \leftskip\z@
+  \rightskip\z@ plus2em\relax
+  \parindent\z@
+}
 \DeclareDocumentCommand\halzu{ s m }{%
   \begingroup
   \IfBooleanTF{#1}
@@ -206,7 +211,7 @@
   }%
   \@tempdimb=.5\wd\z@
   \loop
-    \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\@tempdimb \raggedright \unhcopy\z@}%
+    \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\@tempdimb\halzuraggedright\unhcopy\z@}%
     \ifdim\dimexpr\ht\tw@+\dp\tw@\relax>\tw@\baselineskip
     \advance\@tempdimb .1em
   \repeat
@@ -225,14 +230,17 @@
   \ifdim\dimen@>\z@
     \ifnum\count@>\tw@ \advance\dimen@ \dimen4 \fi
     \ifdim\dimen@ii<\dimen@
-      \halz@first@two{\RawNoindent\unhbox\z@}\dimen@ii
+      \halz@first@two{\unhbox\z@}\dimen@ii
     \else
-      \halz@typeset{\RawNoindent\unhbox\z@}\dimen@
+      \halz@typeset{\unhbox\z@}\dimen@
     \fi
   \fi
 }
 \def\halz@typeset#1#2{% 1: contents; 2: width,
-  \setbox4\vbox{\hsize#2\raggedright\halz@centering #1}%
+  \setbox4\vbox{\hsize#2\halzuraggedright\halz@centering #1}%
+  \ifdim\ht4<\baselineskip
+    \ht4=\dimexpr\ht4+\baselineskip\relax
+  \fi
   \dimen@=\dp4
   \ht4=.5\dimexpr\ht4+\dp4\relax
   \dp4=\ht4
