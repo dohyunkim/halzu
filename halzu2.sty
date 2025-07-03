@@ -15,7 +15,7 @@
 }
 \def\halzuraggedright{%
   \leftskip\z@
-  \rightskip\z@ plus2em\relax
+  \rightskip\z@ plus.5em\relax
   \parindent\z@
 }
 \DeclareDocumentCommand\halzu{ s m }{%
@@ -211,7 +211,8 @@
   }%
   \dimen@=.5\wd\z@
   \loop
-    \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\dimen@\halzuraggedright\unhcopy\z@}%
+    \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\dimen@
+      \halzuraggedright\halz@centering\unhcopy\z@}%
     \ifdim\dimexpr\ht\tw@+\dp\tw@\relax>\tw@\baselineskip
     \advance\dimen@ .1em
   \repeat
