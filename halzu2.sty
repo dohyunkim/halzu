@@ -18,6 +18,7 @@
   \rightskip\z@ plus.5em\relax
   \parindent\z@
 }
+\def\halzuspaceskip{.25em plus.25em minus.125em}
 \DeclareDocumentCommand\halzu{ s m }{%
   \begingroup
   \IfBooleanTF{#1}
@@ -170,7 +171,7 @@
   \linespread\@ne
   \fontsize{\dimen6}{1.1\dimen6}\selectfont
   %
-  \setbox\z@\hbox{\spaceskip.25em plus.25em minus.125em #2}%
+  \setbox\z@\hbox{\spaceskip\halzuspaceskip #2}%
   \ifdim\dimen@<.5\wd\z@
     \halz@first@two{\unhbox\z@}\dimen@
   \else
