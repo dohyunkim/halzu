@@ -215,20 +215,17 @@
     \ifdim\dimexpr\ht\tw@+\dp\tw@\relax>\tw@\baselineskip
     \advance\@tempdimb .1em
   \repeat
+  \@tempdimb=\wd2
   \dimen@ \z@       % check the maximum width of each line.
-  \dimen4 \wd\z@    % check the minimum width of each line.
-  \count@ \z@       % check the number of lines
   \loop
     \setbox4\vsplit\tw@ to\baselineskip
     \unless\ifvoid4
-      \advance\count@\@ne
       \setbox4\vbox{\unvbox4\global\setbox\@ne\lastbox}%
       \setbox4\hbox{\unhbox\@ne}%
       \ifdim\wd4>\dimen@ \dimen@\wd4 \fi
-      \ifdim\wd4<\dimen4 \dimen4\wd4 \fi
   \repeat
   \ifdim\dimen@>\z@
-    \ifnum\count@>\tw@ \advance\dimen@ \dimen4 \fi
+    \ifdim\@tempdimb>\dimen@ \dimen@=\@tempdimb \fi
     \ifdim\dimen@ii<\dimen@
       \halz@first@two{\unhbox\z@}\dimen@ii
     \else
