@@ -209,14 +209,13 @@
     \repeat
     \unskip\unpenalty
   }%
-  \@tempdimb=.5\wd\z@
+  \dimen@=.5\wd\z@
   \loop
-    \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\@tempdimb\halzuraggedright\unhcopy\z@}%
+    \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\dimen@\halzuraggedright\unhcopy\z@}%
     \ifdim\dimexpr\ht\tw@+\dp\tw@\relax>\tw@\baselineskip
-    \advance\@tempdimb .1em
+    \advance\dimen@ .1em
   \repeat
-  \@tempdimb=\wd2
-  \dimen@ \z@       % check the maximum width of each line.
+  \dimen@=\wd\tw@   % check the maximum width of each line.
   \loop
     \setbox4\vsplit\tw@ to\baselineskip
     \unless\ifvoid4
@@ -225,7 +224,6 @@
       \ifdim\wd4>\dimen@ \dimen@\wd4 \fi
   \repeat
   \ifdim\dimen@>\z@
-    \ifdim\@tempdimb>\dimen@ \dimen@=\@tempdimb \fi
     \ifdim\dimen@ii<\dimen@
       \halz@first@two{\unhbox\z@}\dimen@ii
     \else
