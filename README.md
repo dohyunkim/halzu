@@ -8,31 +8,35 @@ double lines. It is (or was) frequently used, among others, in law books.
 ## Usage
 
 In preamble:
-```
+```latex
 \usepackage{halzu2}
 ```
 and in the body of document:
-```
+```latex
 \halzu{...}
 \halzu*{...}
+\halzu[c|r|j]{...}
 ```
-The starred version will make the contents of Halzu box center-aligned.
+The starred version will make the contents of the Halzu box center-aligned.
+
+Optional argument `[c]`, `[r]`, or `[j]` denotes
+ceter-aligned, ragged-right, or justified alignment, respectively.
 
 ## Optional commands
 
-```
+```latex
 \def\halzuraise{0pt}
 ```
 makes all Halzu boxes move upwards by the amount specified.
 `0pt` is the default. Negative value is also acceptable.
 
-```
+```latex
 \def\halzusize{0.7}
 ```
 denotes the factor between the current document font size and the Halzu font size.
 The default value is `0.7`, the same as `scriptsize`.
 
-```
+```latex
 \def\halzuopening{(}
 \def\halzuclosing{)}
 ```
@@ -40,12 +44,21 @@ These commands define surrounding characters that will be typeset at
 the beginning and ending of Halzu box. Ascii parentheses are default.
 Empty values are also acceptable.
 
-```
+```latex
 \halzucentering
 \halzuraggedright
+\halzujustify
 ```
-make the contents of Halzu box center- or left-aligned.
-The latter is the default value.
+These commands make the contents of all Halzu boxes thereafter
+center-aligned or ragged-right or justified, respectively.
+The last one, `\halzujustify` is the default value.
+
+```latex
+\newfontfamily\halzufont{Noto Sans CJK KR Light}[Script=Hangul, Language=Korean]
+```
+declares the font (using fontspec package in the above example)
+that will be used in the contents of all the Halzu boxes.
+Default value is the document font.
 
 ## Example
 

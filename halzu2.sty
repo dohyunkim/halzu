@@ -7,23 +7,34 @@
     \string\csname\space halzu@prev@badness@\the\halzu@count@\string\endcsname
     {\the\@tempcntb}}%
 }
-\def\halzu@centering{%
+\def\halzu@@justify{%
+  \leftskip\z@skip
+  \rightskip\leftskip
+  \parfillskip\z@ plus1fil
+}
+\def\halzu@@centering{%
   \leftskip\z@ plus.5em\relax
   \rightskip\leftskip
   \parfillskip\z@skip
 }
-\def\halzu@raggedright{%
+\def\halzu@@raggedright{%
   \leftskip\z@skip
   \rightskip\z@ plus.5em\relax
   \parfillskip\z@ plus1fil
 }
-\def\halzuraggedright{\let\halzu@justify\halzu@raggedright}
-\def\halzucentering{\let\halzu@justify\halzu@centering}
-\halzuraggedright
+\protected\def\halzujustify    {\let\halzu@justify\halzu@@justify}
+\protected\def\halzuraggedright{\let\halzu@justify\halzu@@raggedright}
+\protected\def\halzucentering  {\let\halzu@justify\halzu@@centering}
+\halzujustify
+\let\halzufont\relax
 \def\halzuspaceskip{.25em plus.25em minus.125em}
-\DeclareDocumentCommand\halzu{ s m }{%
+\DeclareDocumentCommand\halzu{s o m}{%
   \begingroup
   \IfBooleanT{#1}{\halzucentering}%
+  \IfNoValueF{#2}%
+    {\IfBlankF{#2}%
+      {\csname str_case:nn\endcsname{#2}%
+        {{c}{\halzucentering}{j}{\halzujustify}{r}{\halzuraggedright}}}}%
   \leavevmode
   %>>
   \global\advance\halzu@count@\@ne
@@ -173,7 +184,8 @@
   \linespread\@ne
   \fontsize{\dimen6}{1.1\dimen6}\selectfont
   %
-  \setbox\z@\hbox{\ifx\halzu@justify\halzu@centering\let\\\break\fi \spaceskip\halzuspaceskip #2}%
+  \setbox\z@\hbox{\ifx\halzu@justify\halzu@@centering\let\\\break\fi
+    \halzufont \spaceskip\halzuspaceskip #3}%
   \ifdim\dimen@<.5\wd\z@
     \halz@first@two{\unhbox\z@}\dimen@
   \else
