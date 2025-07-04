@@ -185,6 +185,7 @@
   \fontsize{\dimen6}{1.1\dimen6}\selectfont
   %
   \setbox\z@\hbox{\ifx\halzu@justify\halzu@@centering\let\\\break\fi
+    \ifcsname ver@xetexko.sty\endcsname \def\XeKo@stretchshrink{plus.02em minus.01em}\fi
     \halzufont \spaceskip\halzuspaceskip #3}%
   \ifdim\dimen@<.5\wd\z@
     \halz@first@two{\unhbox\z@}\dimen@
@@ -202,7 +203,10 @@
 }
 \def\halz@surrounding{% typeset halzuopening/halzuclosing
   \ifdim\ht6>\z@
-    \raise\dimexpr\halzuraise\relax\copy6
+    \@tempdimb=\dimexpr.7\dimen8 -.5\ht6 +.5\dp6\relax
+    \raise\dimexpr\@tempdimb+\halzuraise\relax \copy6
+    \ht6=\dimexpr\ht6+\@tempdimb\relax
+    \dp6=\dimexpr\dp6-\@tempdimb\relax
   \else
     \begingroup\unhcopy6\endgroup
   \fi
@@ -324,17 +328,17 @@
 \socket_assign_plug:nn{tagsupport/halzu2/paren/end}{default}
 %
 \NewCommandCopy \halzu@halzu@original \halzu
-\RenewDocumentCommand \halzu { s m }
+\RenewDocumentCommand \halzu { s o m }
 {
   \tag_socket_use:n{halzu2/halzu/begin}
   \tag_suspend:n{\halzu}
   \IfBooleanTF {#1}
-  { \halzu@halzu@original * }
-  { \halzu@halzu@original }
+  { \halzu@halzu@original * [#2] }
+  { \halzu@halzu@original [#2] }
   {
     \tag_resume:n{\halzu}
     \tag_socket_use:n{halzu2/text/begin}
-    #2
+    #3
     \tag_socket_use:n{halzu2/text/end}
   }
   \tag_resume:n{\halzu}
