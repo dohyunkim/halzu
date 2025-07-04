@@ -7,23 +7,23 @@
     \string\csname\space halzu@prev@badness@\the\halzu@count@\string\endcsname
     {\the\@tempcntb}}%
 }
-\def\halzucentering{%
-  \leftskip\z@ plus2em\relax
+\def\halzu@centering{%
+  \leftskip\z@ plus.5em\relax
   \rightskip\leftskip
-  \parindent\z@
   \parfillskip\z@skip
 }
-\def\halzuraggedright{%
-  \leftskip\z@
+\def\halzu@raggedright{%
+  \leftskip\z@skip
   \rightskip\z@ plus.5em\relax
-  \parindent\z@
+  \parfillskip\z@ plus1fil
 }
+\def\halzuraggedright{\let\halzu@justify\halzu@raggedright}
+\def\halzucentering{\let\halzu@justify\halzu@centering}
+\halzuraggedright
 \def\halzuspaceskip{.25em plus.25em minus.125em}
 \DeclareDocumentCommand\halzu{ s m }{%
   \begingroup
-  \IfBooleanTF{#1}
-    {\let\halz@centering\halzucentering \let\\\break }
-    {\let\halz@centering\relax }%
+  \IfBooleanT{#1}{\halzucentering}%
   \leavevmode
   %>>
   \global\advance\halzu@count@\@ne
@@ -159,6 +159,8 @@
   \fi
   \halz@surrounding
   %
+  \hbadness\maxdimen
+  \hfuzz\maxdimen
   \vbadness\maxdimen
   \vfuzz\maxdimen
   \let\fontsubfuzz\maxdimen
@@ -171,7 +173,7 @@
   \linespread\@ne
   \fontsize{\dimen6}{1.1\dimen6}\selectfont
   %
-  \setbox\z@\hbox{\spaceskip\halzuspaceskip #2}%
+  \setbox\z@\hbox{\ifx\halzu@justify\halzu@centering\let\\\break\fi \spaceskip\halzuspaceskip #2}%
   \ifdim\dimen@<.5\wd\z@
     \halz@first@two{\unhbox\z@}\dimen@
   \else
@@ -212,8 +214,7 @@
   }%
   \dimen@=.5\wd\z@
   \loop
-    \setbox\tw@\vbox{\hbadness\maxdimen\hfuzz\maxdimen\hsize\dimen@
-      \halzuraggedright\halz@centering\unhcopy\z@}%
+    \setbox\tw@\vbox{\hsize\dimen@\halzu@justify\unhcopy\z@}%
     \ifdim\dimexpr\ht\tw@+\dp\tw@\relax>\tw@\baselineskip
     \advance\dimen@ .1em
   \repeat
@@ -234,7 +235,7 @@
   \fi
 }
 \def\halz@typeset#1#2{% 1: contents; 2: width,
-  \setbox4\vbox{\hsize#2\halzuraggedright\halz@centering #1}%
+  \setbox4\vbox{\hsize#2\halzu@justify #1}%
   \ifdim\ht4<\baselineskip
     \ht4=\dimexpr\ht4+\baselineskip\relax
   \fi
