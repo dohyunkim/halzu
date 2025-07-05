@@ -47,7 +47,15 @@
     \RawNoindent
   \fi
   %<<
-  \dimen8=1ex % dimen8 = 1ex of document font
+  \count@\tracinglostchars
+  \tracinglostchars\z@
+  \setbox\z@\hbox{^^^^ff08^^^^ff09}%
+  \tracinglostchars\count@
+  \ifdim\ht\z@>\z@
+    \dimen8=\dimexpr\ht\z@ -.5\ht\z@ -.5\dp\z@\relax % dimen8 = vcenter - baseline
+  \else
+    \dimen8=.32em % rough guess
+  \fi
   \dimen6=\halzusize\dimexpr\f@size\p@\relax % dimen6 = halzu font size
   \dimen@ii\dimexpr
     \ifdim\hsize<\linewidth
@@ -203,7 +211,7 @@
 }
 \def\halz@surrounding{% typeset halzuopening/halzuclosing
   \ifdim\ht6>\z@
-    \@tempdimb=\dimexpr.7\dimen8 -.5\ht6 +.5\dp6\relax
+    \@tempdimb=\dimexpr\dimen8 -.5\ht6 +.5\dp6\relax
     \raise\dimexpr\@tempdimb+\halzuraise\relax \copy6
     \ht6=\dimexpr\ht6+\@tempdimb\relax
     \dp6=\dimexpr\dp6-\@tempdimb\relax
@@ -255,23 +263,22 @@
   \ifdim\ht4<\baselineskip
     \ht4=\dimexpr\ht4+\baselineskip\relax
   \fi
-  \dimen@=\dp4
   \ht4=.5\dimexpr\ht4+\dp4\relax
   \dp4=\ht4
-  \raise.5\dimexpr
+  \raise\dimexpr
     \ifdim\ht6>\z@
-      \ht6 -\dp6
+      .5\ht6 -.5\dp6
     \else
-      \dimen8 +2\dimen@
-    \fi +\tw@\dimexpr\halzuraise\relax\relax
+      \dimen8
+    \fi +\dimexpr\halzuraise\relax\relax
     \box4
 }
 \def\halzu@halzuopening{\halzuopening}
 \def\halzu@halzuclosing{\halzuclosing}
 \let\halzuraise\z@
 \def\halzusize{0.7}
-\def\halzuopening{\char40}
-\def\halzuclosing{\char41}
+\def\halzuopening{^^^^ff08}
+\def\halzuclosing{^^^^ff09}
 % Tagged PDF
 \ifcsname ver@tagpdf.sty\endcsname \else \endinput \fi
 \ExplSyntaxOn

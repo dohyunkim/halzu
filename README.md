@@ -37,11 +37,11 @@ denotes the factor between the current document font size and the Halzu font siz
 The default value is `0.7`, the same as `scriptsize`.
 
 ```latex
-\def\halzuopening{(}
-\def\halzuclosing{)}
+\def\halzuopening{（}
+\def\halzuclosing{）}
 ```
 These commands define surrounding characters that will be typeset at
-the beginning and ending of Halzu box. Ascii parentheses are default.
+the beginning and ending of Halzu box. Full-width parentheses are default.
 Empty values are also acceptable.
 
 ```latex
@@ -54,7 +54,7 @@ center-aligned or ragged-right or justified, respectively.
 The last one, `\halzujustify` is the default value.
 
 ```latex
-\newfontfamily\halzufont{Noto Sans CJK KR Light}[Script=Hangul, Language=Korean]
+\newfontfamily\halzufont{Noto Sans CJK KR DemiLight}[Script=Hangul, Language=Korean]
 ```
 declares the font (using fontspec package in the above example)
 that will be used in the contents of all the Halzu boxes.
