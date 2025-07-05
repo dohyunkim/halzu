@@ -211,10 +211,7 @@
 }
 \def\halz@surrounding{% typeset halzuopening/halzuclosing
   \ifdim\ht6>\z@
-    \@tempdimb=\dimexpr\dimen8 -.5\ht6 +.5\dp6\relax
-    \raise\dimexpr\@tempdimb+\halzuraise\relax \copy6
-    \ht6=\dimexpr\ht6+\@tempdimb\relax
-    \dp6=\dimexpr\dp6-\@tempdimb\relax
+    \halz@typeset@box@vcenter{6}%
   \else
     \begingroup\unhcopy6\endgroup
   \fi
@@ -263,15 +260,13 @@
   \ifdim\ht4<\baselineskip
     \ht4=\dimexpr\ht4+\baselineskip\relax
   \fi
-  \ht4=.5\dimexpr\ht4+\dp4\relax
-  \dp4=\ht4
+  \halz@typeset@box@vcenter{4}%
+}
+\def\halz@typeset@box@vcenter#1{%
   \raise\dimexpr
-    \ifdim\ht6>\z@
-      .5\ht6 -.5\dp6
-    \else
-      \dimen8
-    \fi +\dimexpr\halzuraise\relax\relax
-    \box4
+  .5\dimexpr\dp#1-\ht#1\relax % -\ht#1 +.5\dimexpr\ht#1+\dp#1\relax
+  +\dimen8+\halzuraise\relax
+  \box#1\relax
 }
 \def\halzu@halzuopening{\halzuopening}
 \def\halzu@halzuclosing{\halzuclosing}
