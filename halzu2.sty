@@ -52,7 +52,8 @@
   \setbox\z@\hbox{^^^^ff08^^^^ff09}%
   \tracinglostchars\count@
   \ifdim\ht\z@>\z@
-    \dimen8=\dimexpr\ht\z@ -.5\ht\z@ -.5\dp\z@\relax % dimen8 = vcenter - baseline
+    \dimen8=.5\dimexpr\ht\z@ -\dp\z@\relax
+    % dimen8 = vcenter - baseline = ht0 - .5\dimexpr\ht0+\dp0\relax
   \else
     \dimen8=.32em % rough guess
   \fi
@@ -193,7 +194,7 @@
   \fontsize{\dimen6}{1.1\dimen6}\selectfont
   %
   \setbox\z@\hbox{\ifx\halzu@justify\halzu@@centering\let\\\break\fi
-    \ifcsname ver@xetexko.sty\endcsname \def\XeKo@stretchshrink{plus.02em minus.01em}\fi
+    \ifcsname ver@xetexko.sty\endcsname \def\XeKo@stretchshrink{plus.025em minus.015em}\fi
     \halzufont \spaceskip\halzuspaceskip #3}%
   \ifdim\dimen@<.5\wd\z@
     \halz@first@two{\unhbox\z@}\dimen@
